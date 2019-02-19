@@ -4,10 +4,11 @@ import LandingPage from "./components/LandingPage3";
 import './App.css';
 import { BrowserRouter, Route } from 'react-router-dom';
 import Cities from './components/Cities';
-import Login from './components/Login';
+import AccountLogin from './components/AccountLogin';
 import Itinerary from './components/Itinerary';
-import AccountForm from './components/AccountForm';
-// import Activities from './components/Activities';
+import AccountRegister from './components/AccountRegister';
+import ProfilePage from './components/ProfilePage';
+import Favourites from './components/Favourites';
 
 class App extends Component {
   render() {
@@ -17,9 +18,10 @@ class App extends Component {
         <Route exact path="/" component={LandingPage}/>
         <Route path='/cities' component={Cities} />
         <Route path='/itinerary/:id' component={Itinerary} />
-        {/* <Route path='/activity/:id/' component={Activities} /> */}
-        <Route path='/login' component={Login} />
-        <Route path='/accountform' component={AccountForm} />
+        <Route path='/accountlogin' component={AccountLogin} />
+        <Route path='/accountregister' component={AccountRegister} />
+        <Route path='/profilepage' component={ProfilePage} />
+        <Route path='/favourites' component={Favourites} />
         <Footer/>
       </div>
       </BrowserRouter>

@@ -13,7 +13,7 @@ class Cities extends Component {
       };
     }
 
-    updateSearch(event) {
+  updateSearch(event) {
       this.setState({search: event.target.value});
     }
 
@@ -27,7 +27,7 @@ class Cities extends Component {
 
   render() {
     console.log(this.props)
-      let filteredCities = this.props.cities.cities.filter(
+      const filteredCities = this.props.cities.cities.filter(
         (city) => {
           return city.name.toLowerCase().indexOf(this.state.search) !==-1;
         }
@@ -39,22 +39,22 @@ class Cities extends Component {
         </div>
         <div>
             <input
-            type="text"
-            value={this.state.search}
-            ref="search"
-            onChange={this.updateSearch.bind(this)}
-            placeholder="type city here"
+                type="text"
+                value={this.state.search}
+                ref="search"
+                onChange={this.updateSearch.bind(this)}
+                placeholder="type city here"
             />
         </div>
       
         <div>
         {filteredCities.map(city => {
           return (
-        <div  key={city._id}>
-          <Link to={`/itinerary/${city._id}`}>
-          <ul>
-            <li>{city.name} {city.country}</li>
-          </ul>
+            <div  key={city._id}>
+              <Link to={`/itinerary/${city._id}`}>
+            <ul>
+              <li>{city.name} {city.country}</li>
+            </ul>
           </Link>
         </div>
 

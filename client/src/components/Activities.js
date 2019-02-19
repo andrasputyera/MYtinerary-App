@@ -36,24 +36,16 @@ render() {
     <Slider className="activitySlider" {...settings}>
     {this.props.Activities.activities.map(activity => {
         return(
-    
         <div key={activity._id}>
-        
             <img className="activityPic" src={activity.activityPic} alt="activityPic"/>
-            <div>{activity.activity}</div>
-            
-        
+            <span>{activity.activity}</span>
         </div>
-            )
-        
-        }
-    )
-}
+            )}
+    )}
     </Slider> 
     <Comments itineraryLink = {this.props.id}/>
-</div>
-    )
-}
+    </div>
+    )}
 }
 
 

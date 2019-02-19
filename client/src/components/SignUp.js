@@ -11,6 +11,14 @@ class SignUp extends Component {
         <Toolbar/>
             <h2>Welcome to our app.</h2>
             <p>Please register with your details below.</p>
+        <form>
+            <label>
+                <input type="checkbox" name="vehicle" value="Bike"/> I have a bike
+            </label>
+            <label>
+                <input type="submit" value="Submit"/>
+            </label>
+        </form>
         </div>
       );
     }

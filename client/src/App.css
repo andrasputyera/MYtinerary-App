@@ -47,13 +47,20 @@
   width: 50px; 
   }
 
-/*Cities Page*/
+/*Cities Component*/
 
 .cityImg {
   width: 80px;
 }
 
-/*Itinerary Page*/
+/*Itinerary Component*/
+
+.itineraryContainer {
+  border: 1px solid black;
+  margin: 10px;
+}
+
+
 
 .profilePic {
   width: 50px;
@@ -71,4 +78,10 @@
 .activityPic {
   width: 100px;
   height: 70px;
+}
+
+/*Account Form Component*/
+
+.errorMessage {
+  color: red;
 }

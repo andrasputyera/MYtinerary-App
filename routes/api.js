@@ -5,7 +5,11 @@ const city = require("./../models/city");
 const Itinerary = require("./../models/itinerary");
 const Activity = require("./../models/activity");
 const Comment = require("./../models/comment");
+const User = require("./../models/user");
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const checkAuth = require('../middleware/check-auth');
 
 
 //creating storage for uploaded files
@@ -113,16 +117,133 @@ router.post('/activity', upload.single('activityPic'), (req, res) => {
 
 //add comments to mlab db
 
-router.post('/comments', (req, res) => {
+router.post('/comments', checkAuth, (req, res) => {
     console.log("here",req.body);
     const comment = Comment({
         itinerary_id: req.body.itinerary_id,
-        user: req.body.user,
+        username: req.body.username,
         comment: req.body.comment
     });
     Comment.create(comment).then(function(results){
     res.send(results);
     });
 });
+
+// add users to mlab db
+
+router.post('/user/register', (req, res, next) => {
+    console.log("In Post User")
+    User.find({ email: req.body.email })
+    .exec()
+    .then(user => {
+        if (user.length >=1) {
+            return res.status(409).json({
+                message: 'Email exists'
+            });
+        } else {
+            bcrypt.hash(req.body.password, 10, (err, hash) => {
+                if (err) {
+                    return res.status(500).json({
+                        error: err
+                    });
+                } 
+                else {
+                    
+                    const user = User({
+                        username: req.body.username,
+                        password: hash,
+                        email: req.body.email,
+                        firstname: req.body.firstname,
+                        lastname: req.body.lastname,
+                        country: req.body.country
+                    });
+                    User
+                        .create(user)
+                        .then(result => {
+                            console.log(result);
+                            res.status(201).json({
+                                message: 'User created'
+                            });
+                        })
+                        .catch(err => {
+                            console.log(err);
+                            res.status(500).json({
+                        error: err
+                    });
+                });
+                }
+            });
+        }
+    })
+});
+
+//login users who are already registered in mlab
+
+router.post('/user/login', (req, res, next) => {
+    console.log(req.body);
+User.find({ email: req.body.email})
+.exec()
+.then(user => {
+    if (user.length < 1) {
+        return res.status(401).json({
+            message: "Authorization failed"
+        });
+    }
+    bcrypt.compare(req.body.password, user[0].password, (err, result) => {
+        if (err) {
+            return res.status(401).json({
+                message: "Authorization failed"
+            });
+        }
+        if (result) {
+            const token = jwt.sign(
+                {
+                email: user[0].email,
+                userId: user[0].id,
+                username: user[0].username
+                }, 
+                process.env.JWT_KEY,
+                {
+                expiresIn: "24h"
+                }
+            );
+            return res.status(200).json({
+                message: "Authorization successful",
+                token: token,
+                user:{ userName: user[0].username,  userId: user[0].id,   email: user[0].email}
+            });
+        }
+        res.status(401).json({
+                message: "Authorization failed"
+                
+        });
+    });
+})
+    .catch(err => {
+    console.log(err);
+    res.status(500).json({
+        error: err
+        });
+    });
+});
+
+//delete users with same id from mlab
+
+// router.delete("/userId", (req, res, next) => {
+//     User.remove({_id:req.params.userId})
+//     .exec()
+//     .then(result => {
+//         res.status(200).json({
+//             message: 'User deleted'
+//         });
+//     })
+//     .catch(err => {
+//         console.log(err);
+//         res.status(500).json({
+//             error: err
+//         });
+//     });
+// });
+
 
 module.exports = router;
