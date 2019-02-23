@@ -30,7 +30,9 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use('/itinerary/:id', express.static('uploads'));
 app.use('/activity/:id', express.static('uploads'));
 
-const mongoDB = process.env.db_url
+//const mongoDB = process.env.db_url;
+const mongoDB = "mongodb://aputyera:Marthica7@ds145474.mlab.com:45474/mytineraryapp";
+// const mongoDB ='mongodb://aputyera:MickeyMouse27@ds145474.mlab.com:45474/mytineraryapp';
 mongoose.connect(mongoDB,
 {useNewUrlParser: true}).then(()=>{
     console.log("mongoDB connected..")

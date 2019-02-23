@@ -137,9 +137,25 @@ router.post('/user/register', (req, res, next) => {
     .exec()
     .then(user => {
         if (user.length >=1) {
-            return res.status(409).json({
-                message: 'Email exists'
-            });
+            if(req.body.provider == 'google' || req.body.provider == 'facebook'){
+               var query = {email: req.body.email},
+                    update = {
+                        firstname: req.body.firstname,
+                        lastname: req.bodylastname
+                    },           
+                    options = { upsert: true, new: true};
+
+                User.findOneAndUpdate(query, update, options, function(err,data) {
+                  if (err) return next(err);
+                  //res.status(201).json({message: 'User login'});
+                  JWTToken(user[0],res);
+                });
+            }else{
+                return res.status(409).json({
+                    message: 'Email exists'
+                });
+            }
+            
         } else {
             bcrypt.hash(req.body.password, 10, (err, hash) => {
                 if (err) {
@@ -161,9 +177,12 @@ router.post('/user/register', (req, res, next) => {
                         .create(user)
                         .then(result => {
                             console.log(result);
-                            res.status(201).json({
-                                message: 'User created'
-                            });
+                            
+                            if(req.body.provider == 'google' || req.body.provider == 'facebook'){
+                                JWTToken(result,res)
+                            }else{
+                                res.status(201).json({message: 'User created'});
+                            }
                         })
                         .catch(err => {
                             console.log(err);
@@ -176,6 +195,18 @@ router.post('/user/register', (req, res, next) => {
         }
     })
 });
+
+function JWTToken (user,res){
+    const token = jwt.sign(
+                { email: user.email,userId: user._id,username: user.username}, 'mytineraryapp',
+                { expiresIn: "24h" }
+            );
+            return res.status(200).json({
+                message: "Authorization successful",
+                token: token,
+                user:{ userName: user.username,  userId: user._id,email: user.email}
+    });
+}
 
 //login users who are already registered in mlab
 
@@ -245,5 +276,58 @@ User.find({ email: req.body.email})
 //     });
 // });
 
+
+
+
+
+router.post('/user/socialLogin', (req, res, next) => {
+    console.log("In Post User")
+    User.find({ email: req.body.email }).exec().then(user => {
+        if (user.length >=1) {
+               var query = {email: req.body.email},
+                    update = {
+                        firstname: req.body.firstname,
+                        lastname: req.bodylastname
+                    },           
+                    options = { upsert: true, new: true};
+
+                User.findOneAndUpdate(query, update, options, function(err,data) {
+                  if (err) return next(err);
+                  //res.status(201).json({message: 'User login'});
+                  JWTToken(user[0],res);
+                });  
+        } else {                    
+            const user = User({
+                username: req.body.username,
+                password: null,
+                email: req.body.email,
+                firstname: req.body.firstname,
+                lastname: req.body.lastname,
+                country: req.body.country
+            });
+            User.create(user).then(result => {
+                        JWTToken(result,res)
+                 
+            }).catch(err => {
+                res.status(500).json({error: err});
+            });
+                
+            
+        }
+    })
+});
+
+router.get('/profiles',checkAuth, function(req, res){
+    var token = req.userData;
+    User.find({ email: token.email}).exec().then(user => {
+        if (user.length < 0) {
+            return res.status(401).json({
+                message: "Authorization failed"
+            });
+        }else{
+            return res.status(200).json(user[0]);
+        }
+    });
+});
 
 module.exports = router;

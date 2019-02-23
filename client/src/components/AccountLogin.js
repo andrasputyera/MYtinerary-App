@@ -73,18 +73,21 @@ class AccountLogin extends Component {
     async responseGoogle(res) {
         console.log(res)
     //    await this.props.oauthGoogle(res.accessToken);
+        if(!res.error){
 
-    let googleUser = {
-        username: res.profileObj.name,
-        email: res.profileObj.email,
-        firstname: res.profileObj.givenName,
-        lastname: res.profileObj.familyName,
-        password: "",
-        country: ""
-    }
-    this.props.postUsers(googleUser);
-        if (!this.props.errorMessage) {
-           this.props.history.push("/profile");
+            let googleUser = {
+                username: res.profileObj.name,
+                email: res.profileObj.email,
+                firstname: res.profileObj.givenName,
+                lastname: res.profileObj.familyName,
+                password: "",
+                country: "",
+                provider:"google"
+            }
+            this.props.postUsers(googleUser);
+                if (!this.props.errorMessage) {
+                   this.props.history.push("/profilepage");
+                }
         }
     }
     
@@ -151,8 +154,18 @@ class AccountLogin extends Component {
                 </div>
             </form>
             <div>
-            <GoogleLogin
+            
+
+            {/*<GoogleLogin
                 clientId="305689576587-08vulfl3dm56rur74s8u2t0gjbaj2rr6.apps.googleusercontent.com"
+                buttonText="Login"
+                onSuccess={this.responseGoogle}
+                onFailure={this.responseGoogle}
+                className="g-signin2"
+                />*/}
+
+            <GoogleLogin
+                clientId="576735281755-k7fks5jn79n3cg3fnn7jc0kal5qick2k.apps.googleusercontent.com"
                 buttonText="Login"
                 onSuccess={this.responseGoogle}
                 onFailure={this.responseGoogle}

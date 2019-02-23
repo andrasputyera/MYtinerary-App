@@ -8,14 +8,16 @@ class ProfilePage extends Component {
 
   componentDidMount() {
     this.props.getProfile();
-    console.log(this.props.profile);
+        console.log("profile get props========",this.props.profile);
+
+    
   }
   render() {
     return (
       <div>
         <h1> This is the profile page</h1>
-        <div>{"email:" + this.props.profile.email}</div>
-        <div>{"name:" + this.props.profile.name}</div>
+        <div>{"email:" + this.props.profile.profile.email}</div>
+        <div>{"name:" + this.props.profile.profile.firstname}</div>
       </div>
     );
   }
