@@ -22,6 +22,7 @@ class AccountLogin extends Component {
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
         this.responseGoogle = this.responseGoogle.bind(this);
+        this.responseFacebook = this.responseFacebook.bind(this);
     }
 
 
@@ -90,15 +91,32 @@ class AccountLogin extends Component {
                 }
         }
     }
+
+    async responseFacebook(res) {
+        if(!res.error && res.status !="unknown"){
+            let facebookUser = {
+                username: res.name,
+                email: res.email,
+                firstname: res.name,
+                lastname: res.name,
+                password: "",
+                country: "",
+                provider:"facebook",
+                id:res.id
+            }
+
+            this.props.postUsers(facebookUser);
+            if (!this.props.errorMessage) {
+               this.props.history.push("/profilepage");
+            }
+        }
+        
+    }
     
     render() {
         const enabled = 
         this.state.email.length > 0 &&
         this.state.password.length > 0;
-
-        const responseFacebook = (response) => {
-            console.log(response);
-        }
 
         return (
             <div>
@@ -155,17 +173,8 @@ class AccountLogin extends Component {
             </form>
             <div>
             
-
-            {/*<GoogleLogin
-                clientId="305689576587-08vulfl3dm56rur74s8u2t0gjbaj2rr6.apps.googleusercontent.com"
-                buttonText="Login"
-                onSuccess={this.responseGoogle}
-                onFailure={this.responseGoogle}
-                className="g-signin2"
-                />*/}
-
             <GoogleLogin
-                clientId="576735281755-k7fks5jn79n3cg3fnn7jc0kal5qick2k.apps.googleusercontent.com"
+               clientId="1053686737034-nvtl0dmcg7tr2e674oaprgf3pi92c6o4.apps.googleusercontent.com"
                 buttonText="Login"
                 onSuccess={this.responseGoogle}
                 onFailure={this.responseGoogle}
@@ -174,11 +183,12 @@ class AccountLogin extends Component {
             </div>
             <div>
             <FacebookLogin
-                appId="2934768580048916"
+                //appId="2934768580048916"
+                appId="464813800562042"
                 autoLoad={true}
                 fields="name,email,picture"
                 // onClick={componentClicked}
-                callback={responseFacebook} 
+                callback={this.responseFacebook} 
                 />
             </div>
                 <p>Don't have a MYtinerary account?

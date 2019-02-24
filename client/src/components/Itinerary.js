@@ -121,12 +121,12 @@ render() {
 
 
            {this.state.showActivities === itinerary._id 
-            ? <Activities id={itinerary._id}/> 
-            : null}
+            ? <Activities id={itinerary._id}/> :null
+            }
 
            {this.state.showActivities === itinerary._id 
-            ? <button onClick={this.toggle} id={itinerary._id}>View Less</button> 
-            : <button onClick={this.toggle} id={itinerary._id}>View All</button>}
+            ? <button onClick={this.handleToggle} id={itinerary._id}>View Less</button> 
+            : <button onClick={this.handleToggle} id={itinerary._id}>View All</button>}
 
         </div>
             )

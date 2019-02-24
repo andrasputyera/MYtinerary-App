@@ -132,7 +132,7 @@ router.post('/comments', checkAuth, (req, res) => {
 // add users to mlab db
 
 router.post('/user/register', (req, res, next) => {
-    console.log("In Post User")
+    console.log("In Post User-------------",req.body)
     User.find({ email: req.body.email })
     .exec()
     .then(user => {
@@ -141,7 +141,7 @@ router.post('/user/register', (req, res, next) => {
                var query = {email: req.body.email},
                     update = {
                         firstname: req.body.firstname,
-                        lastname: req.bodylastname
+                        lastname: req.body.lastname
                     },           
                     options = { upsert: true, new: true};
 
@@ -287,7 +287,7 @@ router.post('/user/socialLogin', (req, res, next) => {
                var query = {email: req.body.email},
                     update = {
                         firstname: req.body.firstname,
-                        lastname: req.bodylastname
+                        lastname: req.body.lastname
                     },           
                     options = { upsert: true, new: true};
 
